@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Calendar App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.6/dist/flatpickr.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1 class="text-center">Task Calendar App</h1>
+    <button class="btn btn-primary mt-3" data-toggle="modal" data-target="#addTaskModal">Add Task</button>
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>Date & Time</th>
+                <th>Task Name</th>
+                <th>Notes</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="taskTableBody">
+            <!-- Tasks will be added here dynamically -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Add Task Modal -->
+<div class="modal fade" id="addTaskModal" tabindex="-1" role="dialog" aria-labelledby="addTaskModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTaskModalLabel">Add Task</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addTaskForm">
+                    <div class="form-group">
+                        <label for="taskDateTime">Task Date & Time:</label>
+                        <input type="text" id="taskDateTime" class="form-control" placeholder="Select date and time">
+                    </div>
+                    <div class="form-group">
+                        <label for="taskName">Task Name:</label>
+                        <input type="text" class="form-control" id="taskName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskNotes">Notes:</label>
+                        <textarea class="form-control" id="taskNotes" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Task</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.6/dist/flatpickr.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        flatpickr("#taskDateTime", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+        });
+
+        $('#addTaskModal').on('shown.bs.modal', function () {
+            $('#taskDateTime').focus();
+        });
+
+        $('#addTaskForm').submit(function (e) {
+            e.preventDefault();
+
+            var taskDateTime = $('#taskDateTime').val();
+            var taskName = $('#taskName').val();
+            var taskNotes = $('#taskNotes').val();
+
+            if (taskDateTime && taskName) {
+                // Add task to the table with delete button
+                var row = '<tr>' +
+                    '<td>' + taskDateTime + '</td>' +
+                    '<td>' + taskName + '</td>' +
+                    '<td>' + taskNotes + '</td>' +
+                    '<td><button class="btn btn-danger btn-sm delete-btn">Delete</button></td>' +
+                    '</tr>';
+                $('#taskTableBody').append(row);
+                // Clear form fields
+                $('#taskDateTime').val('');
+                $('#taskName').val('');
+                $('#taskNotes').val('');
+                $('#addTaskModal').modal('hide');
+            } else {
+                alert('Please fill in both task date & time and name.');
+            }
+        });
+
+        // Handle delete button click
+        $('#taskTableBody').on('click', '.delete-btn', function () {
+            $(this).closest('tr').remove();
+        });
+    });
+</script>
+
+</body>
+</html>
