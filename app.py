@@ -18,7 +18,7 @@ tasks = [
 
 @app.route('/')
 def index():
-    return render_template('calendar.html', tasks=tasks)
+    return render_template('index.html', tasks=tasks)
 
 @app.route('/add_task', methods=['POST'])
 def add_task():
